@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>پرسش‌نامه</title>
+<style>
+:root{--bg:#121212;--card:#1b1b1b;--line:#2b2b2b;--text:#f1f1f1;--muted:#8b8b8b;--ring:#8f8f8f;--warn:#e0a24a}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);line-height:1.9;font-size:var(--fs-body,17px);font-family:"Vazirmatn","Vazir","IRANSans","Segoe UI",Tahoma,sans-serif}
+main{max-width:var(--w,860px);margin:0 auto;padding:28px 16px 64px}
+h1{font-size:calc(var(--fs-body,17px)*1.5);font-weight:700;margin:12px 0 18px;line-height:1.6}
+.prose{color:#d6d6d6;margin:0 0 14px;white-space:pre-line}
+.blocks ul{color:#d6d6d6;padding-inline-start:22px;margin:0 0 14px}
+.blocks.center ul{list-style-position:inside;padding:0}
+.btn{font:inherit;font-weight:600;background:var(--text);color:#151515;border:0;border-radius:12px;padding:12px 26px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn:focus-visible,input:focus-visible+.dot,select:focus-visible,input[type=text]:focus-visible,.nopinion input:focus-visible+.box{outline:2px solid #e8e8e8;outline-offset:3px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.progress{color:var(--muted);font-size:14px;margin-bottom:14px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:28px 26px 20px;margin-bottom:22px}
+.q.missing{border-color:var(--warn)}
+.stem{text-align:center;font-size:var(--fs-stem,22px);font-weight:600;margin:0 0 24px}
+.likert{display:grid;grid-template-columns:minmax(0,1fr) var(--sw,62%) minmax(0,1fr);grid-template-areas:"a s b" ". l .";column-gap:14px;align-items:center}
+.pole{font-size:var(--fs-pole,18px);line-height:1.8;color:#e6e6e6}
+.pole.a{grid-area:a;text-align:right}.pole.b{grid-area:b;text-align:left}
+.slider{grid-area:s;position:relative;height:48px;margin:0 10%;cursor:pointer;touch-action:pan-y;outline:none;user-select:none;-webkit-user-select:none}
+.rail{position:absolute;top:50%;right:0;left:0;height:12px;transform:translateY(-50%);background:#2e2e2e;border-radius:12px}
+.tick{position:absolute;top:50%;width:6px;height:6px;border-radius:50%;background:#5a5a5a;transform:translate(50%,-50%)}
+.thumb{position:absolute;top:50%;width:38px;height:38px;transform:translate(50%,-50%);border-radius:50%;background:var(--card);border:3px solid var(--ring);transition:border-color .15s,background .15s}
+.slider:not(.answered) .thumb{visibility:hidden}
+.slider.answered .thumb{border-color:var(--text);background:#2a2a2a}
+.slider:focus-visible .thumb{outline:2px solid #e8e8e8;outline-offset:3px}
+.sl-labels{grid-area:l;display:flex;margin-top:4px}
+.sl-labels .mid{flex:1;cursor:pointer;padding:0 2px}
+.mid.on{color:var(--text);font-weight:600}
+.mid{font-size:var(--fs-label,15px);color:#cfcfcf;text-align:center;line-height:1.6}
+.q.off .slider,.q.off .sl-labels{opacity:.4}
+.q hr{border:0;border-top:1px solid var(--line);margin:18px 0 14px}
+.nopinion{display:flex;align-items:center;gap:12px;color:#cfcfcf;font-size:calc(var(--fs-body,17px)*1.05);cursor:pointer;width:fit-content;position:relative}
+.nopinion input{position:absolute;opacity:0;width:0;height:0}
+.nopinion .box{width:32px;height:32px;border-radius:9px;background:#000;border:3px solid var(--ring);display:grid;place-items:center}
+.nopinion input:checked+.box::after{content:"";width:7px;height:14px;margin-top:-3px;border:solid var(--text);border-width:0 3px 3px 0;transform:rotate(45deg)}
+.hint{color:var(--warn);font-size:15px;margin:12px 0 0;display:none}
+.q.missing .hint{display:block}
+.plabel{font-size:calc(var(--fs-body,17px)*1.05);font-weight:600;margin-bottom:10px}
+.pq{padding:22px 24px;border-radius:20px}
+.pq input[type=text],.pq select{width:100%;font:inherit;color:var(--text);background:#000;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.choices{display:flex;flex-wrap:wrap;gap:10px}
+.choice{position:relative;cursor:pointer}
+.choice input{position:absolute;opacity:0;width:0;height:0}
+.choice span{display:block;border:1px solid var(--line);border-radius:12px;padding:6px 16px;background:#000}
+.choice input:checked+span{background:var(--text);color:#151515;border-color:var(--text)}
+.choice input:focus-visible+span{outline:2px solid #e8e8e8;outline-offset:2px}
+.note{color:var(--muted);font-size:15px}
+textarea{width:100%;min-height:110px;direction:ltr;text-align:left;background:var(--card);color:#d6d6d6;border:1px solid var(--line);border-radius:12px;padding:12px;font:13px/1.6 ui-monospace,Consolas,monospace}
+[hidden]{display:none!important}
+@media (max-width:560px){.q{padding:22px 14px 16px;border-radius:20px}.stem{font-size:calc(var(--fs-stem,22px)*.85)}.likert{grid-template-columns:1fr 1fr;grid-template-areas:"a b" "s s" "l l";column-gap:14px;row-gap:6px}.pole{font-size:calc(var(--fs-pole,18px)*.88)}.thumb{width:32px;height:32px}.mid{font-size:calc(var(--fs-label,15px)*.8)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+(function respondentApp(C) {
+  const M = C.meta, B = M.btn;
+  const F = M.fs || {}, rs = document.documentElement.style;
+  rs.setProperty("--w", (M.width || 860) + "px");
+  rs.setProperty("--fs-body", (F.body || 17) + "px");
+  rs.setProperty("--fs-stem", (F.stem || 22) + "px");
+  rs.setProperty("--fs-pole", (F.pole || 18) + "px");
+  rs.setProperty("--fs-label", (F.label || 15) + "px");
+  rs.setProperty("--sw", (M.sliderWidth || 62) + "%");
+  const items = C.likert.items;
+  const pitems = C.profile.enabled ? C.profile.items : [];
+  const app = document.getElementById("app");
+  const fa = n => Number(n).toLocaleString("fa-IR");
+  const mk = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  const lines = s => String(s || "").split("\n").map(x => x.trim()).filter(Boolean);
+
+  const S = { p: pitems.map(() => ""), q: items.map(() => ({ v: null, none: false })) };
+  const pages = [{ kind: "intro" }];
+  if (pitems.length) pages.push({ kind: "profile" });
+  const per = M.perPage > 0 ? M.perPage : Math.max(items.length, 1);
+  for (let i = 0; i < items.length; i += per) pages.push({ kind: "likert", from: i, to: Math.min(i + per, items.length) });
+  pages.push({ kind: "outro" });
+  let cur = 0, csv = "";
+  let cards = [], check = () => true, progressEl = null;
+
+  /* ذخیره بی‌صدای پیشرفت: اگر مرورگر صفحه را دوباره بارگذاری کرد، از همان‌جا ادامه می‌دهد */
+  const KEY = "qn:" + (str => { let h = 5381; for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return (h >>> 0).toString(36); })(
+    JSON.stringify([M.title, items.map(q => [q.stem, q.a, q.b]), pitems.map(q => q.l)]));
+  const TTL = 3 * 3600 * 1000;
+  const persist = () => { try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), cur, csv, p: S.p, q: S.q })); } catch (e) {} };
+  const forget = () => { try { localStorage.removeItem(KEY); } catch (e) {} };
+  try {
+    const sv = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (sv && Date.now() - sv.t < TTL && sv.q.length === S.q.length && sv.p.length === S.p.length && sv.cur >= 0 && sv.cur < pages.length) {
+      S.p = sv.p.map(x => String(x ?? ""));
+      sv.q.forEach((a, i) => { S.q[i] = { v: typeof a.v === "number" ? a.v : null, none: !!a.none }; });
+      cur = sv.cur; csv = sv.csv || "";
+      if (pages[cur].kind === "outro" && !csv) csv = buildCsv();
+    }
+  } catch (e) {}
+
+  function blocks(pg) {
+    const w = mk("div", "blocks" + (pg.align === "center" ? " center" : ""));
+    pg.blocks.forEach(b => {
+      if (b.t === "h") w.append(mk("h1", "", b.x));
+      else if (b.t === "ul") { const u = mk("ul"); lines(b.x).forEach(s => u.append(mk("li", "", s))); w.append(u); }
+      else w.append(mk("p", "prose", b.x));
+    });
+    return w;
+  }
+  function nav(list) {
+    const a = mk("div", "actions");
+    list.forEach(([t, cls, fn]) => { const b = mk("button", "btn " + (cls || ""), t); b.onclick = fn; a.append(b); });
+    return a;
+  }
+  function esc(v) {
+    let s = v == null ? "" : String(v);
+    if (/^[=+\-@]/.test(s)) s = "'" + s;
+    return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+  function buildCsv() {
+    const head = ["submitted_at"], row = [new Date().toISOString()];
+    pitems.forEach((it, i) => { head.push(it.code || "p" + (i + 1)); row.push(S.p[i]); });
+    items.forEach((it, i) => { head.push(it.code || "q" + (i + 1)); row.push(S.q[i].none ? "NA" : S.q[i].v); });
+    return head.map(esc).join(",") + "\n" + row.map(esc).join(",") + "\n";
+  }
+
+  function renderProfile() {
+    cards = [];
+    app.append(mk("h1", "", C.profile.title));
+    if (C.profile.desc) app.append(mk("p", "prose", C.profile.desc));
+    pitems.forEach((it, i) => {
+      const card = mk("div", "q pq");
+      card.append(mk("div", "plabel", it.l + (it.r ? " *" : "")));
+      const touch = () => { card.classList.remove("missing"); persist(); };
+      if (it.type === "text") {
+        const inp = mk("input"); inp.type = "text"; inp.value = S.p[i];
+        inp.oninput = () => { S.p[i] = inp.value; touch(); };
+        card.append(inp);
+      } else if (it.type === "select") {
+        const sel = mk("select");
+        const o0 = mk("option", "", "انتخاب کنید"); o0.value = ""; sel.append(o0);
+        lines(it.o).forEach(o => { const op = mk("option", "", o); op.value = o; sel.append(op); });
+        sel.value = S.p[i];
+        sel.onchange = () => { S.p[i] = sel.value; touch(); };
+        card.append(sel);
+      } else {
+        const g = mk("div", "choices");
+        lines(it.o).forEach(o => {
+          const lb = mk("label", "choice");
+          const r = document.createElement("input");
+          r.type = "radio"; r.name = "p" + i; r.value = o; r.checked = S.p[i] === o;
+          r.onchange = () => { S.p[i] = o; touch(); };
+          lb.append(r, mk("span", "", o)); g.append(lb);
+        });
+        card.append(g);
+      }
+      card.append(mk("p", "hint", "لطفاً این مورد را تکمیل کنید."));
+      cards.push([card, () => !it.r || String(S.p[i]).trim() !== ""]);
+      app.append(card);
+    });
+    check = () => cards.map(([c, ok]) => { const bad = !ok(); c.classList.toggle("missing", bad); return bad ? c : null; }).filter(Boolean);
+  }
+
+  function updProgress() {
+    if (!progressEl) return;
+    const done = S.q.filter(a => a.none || a.v !== null).length;
+    progressEl.textContent = fa(done) + " از " + fa(items.length) + " سوال پاسخ داده شده";
+  }
+
+  function renderLikert(pg) {
+    cards = [];
+    progressEl = mk("div", "progress");
+    app.append(progressEl);
+    const free = M.slider === "free";
+    const toVal = f => { const x = f * 4; return Math.round((M.start === "left" ? 5 - x : x + 1) * 100) / 100; };
+    const toF = v => (M.start === "left" ? 5 - v : v - 1) / 4;
+    for (let i = pg.from; i < pg.to; i++) {
+      const it = items[i], st = S.q[i];
+      const card = mk("div", "q");
+      if (it.stem) card.append(mk("p", "stem", it.stem));
+      const row = mk("div", "likert");
+      const sl = mk("div", "slider");
+      sl.setAttribute("role", "slider");
+      sl.setAttribute("aria-valuemin", "1"); sl.setAttribute("aria-valuemax", "5");
+      sl.tabIndex = st.none ? -1 : 0;
+      sl.append(mk("div", "rail"));
+      for (let k = 0; k < 5; k++) { const t = mk("span", "tick"); t.style.right = (k * 25) + "%"; sl.append(t); }
+      const thumb = mk("div", "thumb"); sl.append(thumb);
+      const labs = mk("div", "sl-labels");
+      const labEls = [0, 1, 2, 3, 4].map(pos => { const d = mk("div", "mid", (it.labels || M.defaultLabels)[pos] || ""); labs.append(d); return d; });
+      const draw = () => {
+        const has = st.v !== null, f = has ? toF(st.v) : 0.5;
+        thumb.style.right = (f * 100) + "%";
+        sl.classList.toggle("answered", has);
+        sl.setAttribute("aria-valuenow", has ? st.v : "");
+        const cp = has && !free ? Math.round(f * 4) : -1;
+        labEls.forEach((d, k) => d.classList.toggle("on", k === cp));
+      };
+      const setF = f => {
+        f = Math.max(0, Math.min(1, f));
+        if (!free) f = Math.round(f * 4) / 4;
+        st.v = toVal(f); card.classList.remove("missing"); draw(); updProgress(); persist();
+      };
+      let drag = false;
+      const fromEvent = e => { const r = sl.getBoundingClientRect(); setF((r.right - e.clientX) / r.width); };
+      sl.addEventListener("pointerdown", e => { if (st.none) return; drag = true; sl.setPointerCapture(e.pointerId); fromEvent(e); });
+      sl.addEventListener("pointermove", e => { if (drag) fromEvent(e); });
+      sl.addEventListener("pointerup", () => { drag = false; });
+      sl.addEventListener("pointercancel", () => { drag = false; });
+      sl.addEventListener("click", e => { if (!st.none && st.v === null) fromEvent(e); });
+      sl.addEventListener("keydown", e => {
+        if (st.none) return;
+        if (st.v === null && e.key.startsWith("Arrow")) { e.preventDefault(); setF(0.5); return; }
+        const cur = st.v === null ? 0.5 : toF(st.v), step = free ? 0.025 : 0.25;
+        let n;
+        if (e.key === "ArrowLeft" || e.key === "ArrowUp") n = cur + step;
+        else if (e.key === "ArrowRight" || e.key === "ArrowDown") n = cur - step;
+        else if (e.key === "Home") n = 0;
+        else if (e.key === "End") n = 1;
+        else return;
+        e.preventDefault(); setF(n);
+      });
+      labEls.forEach((d, k) => { d.onclick = () => { if (!st.none) setF(k / 4); }; });
+      row.append(mk("div", "pole a", it.a || ""), sl, mk("div", "pole b", it.b || ""), labs);
+      card.append(row);
+      draw();
+      card.append(mk("hr"));
+      const nl = mk("label", "nopinion");
+      const cb = document.createElement("input");
+      cb.type = "checkbox"; cb.checked = st.none;
+      cb.onchange = () => {
+        st.none = cb.checked;
+        if (cb.checked) { st.v = null; card.classList.remove("missing"); }
+        card.classList.toggle("off", cb.checked);
+        sl.tabIndex = cb.checked ? -1 : 0;
+        draw();
+        updProgress();
+        persist();
+      };
+      nl.append(cb, mk("span", "box"), mk("span", "", M.noOpinion));
+      card.append(nl);
+      card.append(mk("p", "hint", "لطفاً یک گزینه را انتخاب کنید یا «" + M.noOpinion + "» را بزنید."));
+      card.classList.toggle("off", st.none);
+      cards.push([card, () => st.none || st.v !== null]);
+      app.append(card);
+    }
+    updProgress();
+    check = () => cards.map(([c, ok]) => { const bad = !ok(); c.classList.toggle("missing", bad); return bad ? c : null; }).filter(Boolean);
+  }
+
+  function renderOutro() {
+    app.append(blocks(C.outro));
+    const note = mk("p", "note", "اگر دانلود در مرورگر شما کار نکرد، متن زیر را کپی کنید و در پیام یا ایمیل بفرستید.");
+    const ta = mk("textarea"); ta.readOnly = true; ta.value = csv;
+    note.hidden = true; ta.hidden = true;
+    const reveal = () => { note.hidden = false; ta.hidden = false; };
+    const mkFile = () => new File(["\ufeff" + csv], (M.fileName || "answers") + "-" + Date.now() + ".csv", { type: "text/csv" });
+    let canShare = false;
+    try { canShare = !!(navigator.share && navigator.canShare && navigator.canShare({ files: [mkFile()] })); } catch (e) {}
+    const list = [];
+    if (canShare) list.push([B.share || "ارسال پاسخ‌ها", "", async () => {
+      try { await navigator.share({ files: [mkFile()], title: M.title }); forget(); }
+      catch (e) { if (!e || e.name !== "AbortError") reveal(); }
+    }]);
+    list.push([B.download, canShare ? "ghost" : "", () => {
+      const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const l = document.createElement("a");
+      l.href = url; l.download = (M.fileName || "answers") + "-" + Date.now() + ".csv";
+      document.body.appendChild(l); l.click(); l.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      reveal();
+    }]);
+    list.push([B.copy, "ghost", async () => {
+      reveal();
+      try { await navigator.clipboard.writeText(csv); } catch (e) { ta.select(); }
+    }]);
+    const a = nav(list);
+    app.append(a, note, ta);
+  }
+
+  function go(d) {
+    if (d > 0 && pages[cur].kind !== "intro") {
+      const bad = check();
+      if (bad.length) { bad[0].scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+    }
+    cur += d;
+    if (pages[cur].kind === "outro") csv = buildCsv();
+    persist();
+    render();
+  }
+  function render() {
+    app.replaceChildren();
+    progressEl = null; check = () => [];
+    const pg = pages[cur];
+    if (pg.kind === "intro") {
+      app.append(blocks(C.intro), nav([[B.start, "", () => go(1)]]));
+    } else if (pg.kind === "outro") {
+      renderOutro();
+    } else {
+      if (pg.kind === "profile") renderProfile(); else renderLikert(pg);
+      const last = pages[cur + 1].kind === "outro";
+      app.append(nav([[last ? B.finish : B.next, "", () => go(1)], [B.back, "ghost", () => go(-1)]]));
+    }
+    window.scrollTo(0, 0);
+  }
+  render();
+})({"meta":{"title":"پرسش‌نامه","fileName":"پاسخ-پرسشنامه","start":"right","slider":"snap","perPage":13,"width":1080,"sliderWidth":55,"defaultLabels":["کاملاً","نسبتاً","متوازن","نسبتاً","کاملاً"],"fs":{"body":16,"stem":20,"pole":18,"label":14},"noOpinion":"نظری ندارم","defaultStem":"سازمان من تمایل دارد","btn":{"start":"شروع پرسش‌نامه","next":"ادامه","back":"قبلی","finish":"ثبت پاسخ‌ها","download":"دانلود فایل پاسخ‌ها","copy":"کپی متن پاسخ‌ها","share":"ارسال پاسخ‌ها"}},"intro":{"align":"right","blocks":[{"t":"h","x":"پرسش‌نامه پژوهش سازمانی"},{"t":"p","x":"از شما برای مشارکت در این پرسش‌نامه سپاسگزاریم."},{"t":"p","x":"در اکثر سوالات این پرسش‌نامه، دو عبارت روبه‌روی شما قرار می‌گیرد. با کشیدن نشان‌گر (اسلایدر)، مشخص کنید کدام گزینه به سازمان شما نزدیک‌تر است. هرچه نشان‌گر را به یک سمت بیشتر بکشید، بدین معناست که سازمان شما تمایل بیشتری به همان گزینه دارد.\nدر برخی از سوالات، بر خلاف توضیحات بالا، یک عبارت پیش روی شما قرار دارد. با کشیدن نشان‌گر مشخص کنید چقدر عبارت مورد نظر با سازمان شما تطابق دارد.\nاگر موضوع سوال به سازمان شما مرتبط نیست، گزینه «نظری ندارم» را انتخاب کنید.\nپاسخ‌های شما نزد ما محرمانه می‌ماند."}]},"profile":{"enabled":true,"title":"اطلاعات پاسخ‌دهنده","desc":"لطفاً ابتدا اطلاعات زیر را تکمیل کنید.","items":[{"l":"نام و نام خانوادگی (اختیاری)","type":"text","o":"","r":false,"code":""},{"l":"رده سازمانی","type":"choice","o":"کارمند و کارشناس\nمدیر میانی\nمدیر ارشد\nمدیرعامل\nمشاور","r":true,"code":""},{"l":"رده سنی","type":"choice","o":"کمتر از ۳۰ سال\n۳۰ تا ۳۹ سال\n۴۰ تا ۴۹ سال\n۵۰ سال و بالاتر","r":true,"code":""},{"l":"سابقه کار در سازمان","type":"select","o":"کمتر از سه سال\nسه تا 5 سال\n5 تا 10 سال\n10 تا 15 سال\nبیش از 15 سال\n","r":true,"code":""},{"l":"حوزه سازمانی (در سازمان خود در چه حوزه تخصصی مشغول به کار هستید)","type":"text","o":"","r":true,"code":""}]},"likert":{"items":[{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"نتایجی را که به آن دست یافته است حفظ نماید","b":"با بررسی دوباره پیش‌فرض‌های خود مطمئن شود در آینده نیز می‌‎تواند موفق باشد","labels":null,"code":"Q8"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"ابعاد انسانی، اجتماعی و محیط‌زیستی را در کنار ابعاد مالی مورد توجه قرار دهد","b":"بر اساس ریسک‌ها و فرصت‌های مالی در خصوص یک اقدام تصمیم‌گیری کند","labels":null,"code":"Q20"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"برنامه‌ریزی را به‌گونه‌ای انجام دهد که در مسیر خود، قابلیت انعطاف داشته باشد","b":"بر تحقق اهداف زمانی شفاف و مشخص تمرکز داشته باشد","labels":null,"code":"Q53"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"وقتی نتایج عملکرد سازمان مطلوب نیست، سهم و مسئولیت خود در قبال نتایج را بپذیرد","b":"وقتی نتایج عملکرد سازمان مطلوب نیست، سهم عوامل محیطی موثر در عدم موفقیت را ارزیابی کند","labels":null,"code":"Q39"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"برای حذف احتمال خطا، همه جزئیات عملیاتی را با دقت بالا تحت نظر بگیرد","b":"برای افزایش انعطاف و سرعت عمل به برخی از جزئیات اهمیت کمتری بدهد","labels":null,"code":"Q58"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"به دنبال خلق ایده‌های جدیدی باشد","b":"با ارزیابی ریسک، وضعیت موجود را حفظ نماید","labels":null,"code":"Q2"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در موقعیت‌هایی که دیدگاه‌های متناقض در سازمان وجود دارند، یک ذهنیت مشترک و متحد در کل سازمان ایجاد کند","b":"در موقعیت‌هایی که دیدگاه‌های متناقض در سازمان وجود دارند، از اختلاف نظرها برای رسیدن به راهکارهای تازه استفاده کند","labels":null,"code":"Q12"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"تصمیمات خود را با قاطعیت اجرا نماید","b":"فضایی را فراهم کند که در آن کارکنان از لحاظ روانی خود را مالک شرکت،تصمیمات و نتایج آن قلمداد کنند","labels":null,"code":"Q79"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"فرایندهای تخصصی را با اتکا به توان فنی واحدهای سازمانی هدایت کند","b":"شبکه‌ای از افراد و نخبگان با تجربه‌های متنوع را برای شناسایی بهبودهای فرایندی جدید گرد هم آورد","labels":null,"code":"Q91"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"عملکرد مدیران را به شکل دقیق و منصفانه ارزیابی کند","b":"فرصت‌هایی برای گفت‌وگوی صادقانه میان سطوح مختلف فراهم کند","labels":null,"code":"Q98"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در شرایطی که بخشی از اهداف محقق نشده باشد، به عدم تحقق ناشی از کمبود منابع توجه نماید","b":"در شرایطی که بخشی از اهداف محقق نشده باشد، به اثر محیط رقابتی و فضای کلان (محیط عمومی) توجه نماید","labels":null,"code":"Q189"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"با برخوردی یکسان، همه گروه‌های کارکنان را مدنظر قرار دهد","b":"در برخورد با انتظارات گروه‌های مختلف کارکنان رفتار متفاوتی را در پیش گیرد","labels":null,"code":"Q122"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"وقتی روشن شدن نتایج عملکرد می‌تواند اعتبار سازمان را کاهش دهد، با پذیرش مسئولیت حقایق را منتشر کند","b":"با ترویج دستاوردهای خود، تلاش کند اعتبار برند را حفظ نماید","labels":null,"code":"Q40"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"نتایج را به‌صورت نظام‌مند و یکپارچه مستند کند","b":"با کاهش مستندسازی در زمان و منابع صرفه‌جویی کند","labels":null,"code":"Q52"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در شرایطی که نگرانی از نتایج مالی ضعیف وجود دارد، کیفیت مطلوب را حفظ نماید","b":"در شرایطی که نگرانی از نتایج مالی ضعیف وجود دارد، اهداف مالی خود را محقق کند","labels":null,"code":"Q60"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در شرایطی که سازمان ما نیاز به منابع بیشتری داشته باشد، ترجیح می‌دهد با تمرکز بر خلاقیت خود راهی پیدا یا ابداع کند","b":"در شرایطی که سازمان ما نیاز به منابع بیشتری داشته باشد، برای دستیابی به منابع بیرونی، بخشی از منابع یا منافع خود را به اشتراک بگذارد","labels":null,"code":"Q62"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"به جلوگیری از بروز مجدد خطاها و مشکلات فکر کند","b":"به پیش‌بینی خطاهایی که ممکن است برای اولین بار رخ دهند، فکر کند","labels":null,"code":"Q82"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"فضای امن و کنترل‌شده‌ای برای اجرای ایده‌های تازه ایجاد کند","b":"ظرفیت‌ها و توجه خود را به پیشبرد عملیات جاری معطوف نماید","labels":null,"code":"Q88"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"بیشتر روی سنجش عملکرد مدیران و واحدها تمرکز نماید","b":"بیشتر روی تبدیل درس‌آموخته‌ها به ایده‌هایی برای تغییر یا تحول تمرکز نماید","labels":null,"code":"Q117"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"با واکنش به نشانه‌ها و تغییرات محیط بیرونی موقعیت خود را حفظ کند","b":"به صورت پیش‌دستانه برای رویارویی با چالش‌ها آماده شود","labels":null,"code":"Q11"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"روی حضور موفق در بازارهای فعلی تمرکز داشته باشد","b":"با ایجاد تنوع در بازارها، منابع درآمدی و اهداف، از وابستگی به یک مسیر پرهیز کند","labels":null,"code":"Q28"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"اگر نتایج عملکرد نشان دهند که سازمان نیاز به تغییر دارد، خود را آماده تغییر کند","b":"بر هویت ساخته شده و شکل گرفته خود تمرکز کند","labels":null,"code":"Q50"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"وقتی فشار بیرونی برای پایبندی کامل به جدول زمان‌بندی وجود دارد که تحقق آن دشوار است، برنامه‌ها را با توجه به واقعیت‌های فرایندی تنظیم کند","b":"وقتی فشار بیرونی برای پایبندی کامل به جدول زمان‌بندی وجود دارد که تحقق آن دشوار است، به تحقق انتظارات بیرونی  تمرکز نماید.","labels":null,"code":"Q54"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"فضایی برای طرح پرسش‌های بنیادین و بررسی فرض‌های موجود فراهم کند","b":"استانداردهای شناخته شده را به صورت دقیق به اجرا درآورد","labels":null,"code":"Q93"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"زمانی که منابع محدود و شرایط دشوار است، به دنبال مسیرهای جدید باشد","b":"زمانی که منابع محدود و شرایط دشوار است، با نظم و پافشاری مسیر فعلی دنبال کند","labels":null,"code":"Q31"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"از تجربه سازمان‌های دیگر یادگیری داشته باشد","b":"ایده‌های نوآوری را در درون سازمان جستجو کند","labels":null,"code":"Q96"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"رشد فردی و یادگیری مدیران و کارکنان را در اولویت بالاتری نسبت به تحقق نتایج سازمانی قرار دهد","b":"تحقق نتایج سازمانی را در اولویت بالاتری نسبت به رشد فردی و یادگیری مدیران و کارکنان قرار دهد","labels":null,"code":"Q103"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"بیشتر روی گردش اطلاعات عملیاتی در سیستم‌های اطلاعاتی تمرکز نماید","b":"بیشتر روی مستندسازی وقایع و ثبت درس‌آموخته‌ها تمرکز نماید","labels":null,"code":"Q118"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"اگر در سازمان ما اختلاف دیدگاه به وجود آید، سازوکاری برای بیان آزادانه دیدگاه‌ها و دغدغه‌ها ایجاد کند","b":"اخذ تصمیم را به سطوح بالاتر مدیریتی ارجاع دهد","labels":null,"code":"Q99"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در شرایطی که محیط مبهم است، قبل از روشن شدن ابهامات محیطی، چند سناریوی موازی را پیگیری کند","b":"در شرایطی که محیط مبهم است، منابع را به یک اقدام قاطع با اهداف مشخص تخصیص داده و آن را اجرا کند","labels":null,"code":"Q23"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"منابع لازم برای اقدامات خود را به هر شکلی تأمین نماید","b":"با توجه به محدودیت‌ها، به صورت مستمر تخصیص منابع به اقدامات خود را بازنگری کند","labels":null,"code":"Q33"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"حتی وقتی دستاوردهای گذشته برجسته هستند، با کشف زمینه‌های قابل بهبود بازهم خود را ارتقاء دهد","b":"بر ترویج موفقیت‌های خود در محیط تمرکز کند","labels":null,"code":"Q42"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در بررسی وضعیت رقابتی بیشتر به تجربه‌های میدانی و برداشت‌های عملی اتکا کند","b":"بر اساس داده‌های رسمی محیط را تحلیل کند","labels":null,"code":""},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در انتخاب و استقرار سیستم‌های اطلاعاتی به سادگی و قابل فهم بودن آن توجه کند","b":"سیستم‌های اطلاعاتی، جامع و دارای قابلیت‌های مورد نیاز باشد","labels":null,"code":"Q134"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"گفت‌وگوهای منظم برای بررسی تجربه‌ها و چالش‌های واقعی ایجاد کند","b":"ارزیابی عملکرد را فقط بر اساس شاخص‌های رسمی انجام دهد","labels":null,"code":"Q101"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در شرایطی که یک بحران ناگهانی رخ دهد، ابتدا پیامدهای تصمیم را با داده‌ها و شواهد دقیق بسنجد","b":"در شرایطی که یک بحران ناگهانی رخ دهد، با تصمیم‌گیری سریع به فشار های بیرونی پاسخ دهد","labels":null,"code":"Q78"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"اگر اجرای یک ایده تازه با شکست‌های اولیه همراه باشد، همچنان تلاش نماید تا به نتیجه نهایی برسد","b":"با برگشت به عقب، گام‌ها و عملکرد خود را مجدداً مورد ارزیابی قرار دهد","labels":null,"code":"Q68"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"وقتی سازمان ما با چالش عملیاتی پیچیده‌ای روبرو می‌شود، راه‌حل‌های مختلف را از منظر انتظارات ذینفعان مختلف ارزیابی و ارزش‌گذاری کند","b":"وقتی سازمان ما با چالش عملیاتی پیچیده‌ای روبرو می‌شود، راه‌حل‌های مختلف را با توجه به اهداف تعیین شده از قبل ارزیابی و ارزش‌گذاری کند","labels":null,"code":"Q71"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در تدوین سمت و سوی آینده خود، روی مشاهده و کشف روندهای محیطی تمرکز کند","b":"در تدوین سمت و سوی آینده خود، روی تحلیل علل موفقیت یا شکست خود در گذشته تمرکز کند.","labels":null,"code":"Q84"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"وقتی پذیرش توانمندی رقبا می‌تواند تهدیدی برای جایگاه سازمان تلقی شود، آن‌ها را به رسمیت بشناسد","b":"وقتی پذیرش توانمندی رقبا می‌تواند تهدیدی برای جایگاه سازمان تلقی شود، به ترویج جایگاه رقابتی خود در بازار تمرکز کند","labels":null,"code":"Q45"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"گروه‌های کاری را ترغیب کند با تکیه بر تعاملات، مسئولیت‌ها و نقش‌ها را با یکدیگر هماهنگ نمایند","b":"در قالب مستندات رسمی و شفاف، فرایندها را مستندسازی، پیاده و نقش‌ها را مشخص کند","labels":null,"code":"Q138"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"اگر پرداختن به یک ایده جدید و جذاب، ثبات یا شفافیت رویه‌های موجود را دچار مخاطره کند، ایده تازه را پیگیری کند","b":"اگر پرداختن به یک ایده جدید و جذاب، ثبات یا شفافیت رویه‌های موجود را دچار مخاطره کند، همان رویه‌های پایدار را دنبال کند","labels":null,"code":"Q65"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"جبران خدمات افراد و تیم‌ها از عملکرد آن‌ها تأثیر بیشتری بگیرد","b":"جبران خدمات افراد و تیم‌ها از ویژگی‌ها و ماهیت شغل تأثیر بیشتری بگیرد","labels":null,"code":"Q120"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"در شرایطی که فشار برای سرمایه‌گذاری سریع وجود دارد، ابتدا با ارزیابی هزینه–فرصت اقدامات خود را با واقعیت اقتصادی سازگار سازد","b":"در شرایطی که فشار برای سرمایه‌گذاری سریع وجود دارد، برای کسب بازار سریعا ً اقدام کند","labels":null,"code":"Q35"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"تعاملات غیررسمی با محیط اجتماعی خود را گسترش دهد","b":"به گزارش‌دهی دوره‌ای و رسمی دستاوردهای خود به ذینفعان تمرکز نماید","labels":null,"code":"Q76"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"از پیشبرد کارآمد فرایندها و اجرای دقیق نقش‌ها قدردانی کند","b":"تا از دیدگاه‌های متفاوت و جدید قدردانی کند","labels":null,"code":"Q92"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"امکان رشد بیشتر از طریق مشارکت در تصمیم‌گیری‌های بین واحدی فراهم شود","b":"امکان رشد از طریق مسیرهای ارتقای تخصصی و عمودی از قبل تعریف شده فراهم شود","labels":null,"code":"Q109"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"برنامه‌های آتی خود را با در نظر گرفتن همه سناریوهای محتمل تدوین نماید","b":"توجه خود را به محتمل‌ترین سناریوی محیطی متمرکز کند","labels":null,"code":"Q132"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"تحلیل درس‌آموخته‌ها و عملکرد خود را بر اساس داده‌های واقعی انجام دهد","b":"عملکرد مثبت خود را در گزارش‌ها منعکس و ترویج کند","labels":null,"code":"Q114"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"تصمیمات عملیاتی در سطوح پائین‌تر با تفویض مسئولیت‌ها و اختیارات کافی و متناسب گرفته شود","b":"با تمرکز تصمیم‌گیری، سرعت عمل بیشتری ایجاد کند","labels":null,"code":"Q22"},{"stem":"سازمان من تمایل دارد/ تلاش می‌کند","a":"پیش‌بینی نیازهای مدیریتی آتی بر اساس تحولات محیط کسب و کار بیشتر مورد توجه قرار گیرد","b":"توسعه مدیران با برنامه‌ریزی آموزشی رسمی و از پیش‌تعیین شده مورد توجه قرار گیرد","labels":null,"code":"Q112"},{"stem":"","a":"سازمان ما چشم‌انداز و اهداف خود را به‌گونه‌ای بیان کرده است که کارکنان آن را به روشنی درک کرده‌اند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q143"},{"stem":"","a":"کارکنان ما وضعیت واقعی سازمان را به‌گونه‌ای درک کرده‌اند که منطبق بر واقعیت‌های محیطی و درونی سازمان است.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q155"},{"stem":"","a":"فرهنگ سازمانی در سازمان ما یک واژه نیست بلکه در رفتار همه ارکان سازمان به ویژه مدیران ارشد قابل مشاهده است.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q161"},{"stem":"","a":"در سازمان ما فرصت‌های پیشرفت شغلی برای همگان روشن و در دسترس هستند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q165"},{"stem":"","a":"در سازمان ما اهدافی که برای تیم‌ها تعیین شده است، روشن و قابل اندازه‌گیری هستند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q169"},{"stem":"","a":"فعالیت‌های سازمان ما همواره سودآوری یا عواید غیرمالی مناسبی به همراه داشته است.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q178"},{"stem":"","a":"سازمان ما در گذشته به خوبی خود را برای تغییراتی که در محیط و بازار پیش‌بینی کرده بود، آماده نموده است.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q182"},{"stem":"","a":"کارکنان ما قادرند چشم‌انداز و اهداف سازمان را با فعالیت‌های روزمره خود ارتباط دهند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q146"},{"stem":"","a":"وقتی رخداد جدیدی در محیط سازمان روی می‌دهد، سازمان قادر است الزامات جدید را شناسایی و خود را با آن تطبیق دهد.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q156"},{"stem":"","a":"در سازمان ما رفتارهایی که با فرهنگ سازمان مطابقت ندارند به ندرت دیده می‌شوند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q162"},{"stem":"","a":"سازمان ما توانسته شرایطی به وجود آورد که همگان باور نمایند تحقق منافع سازمان، به تحقق منافع خودشان می‌انجامد.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q166"},{"stem":"","a":"در سازمان ما افرادی که در اجرای تصمیمات اثرگذار هستند، در اخذ آن تصمیم مشارکت می‌کنند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q170"},{"stem":"","a":"وقتی مشتریان و مصرف‌کنندگان به محصولات ما نیاز پیدا می‌کنند، برند ما یکی از اولین برندهایی است که به ذهن آن‌ها می‌رسد.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q180"},{"stem":"","a":"در سازمان ما داستان‌هایی نه چندان دور از عملکرد گذشته وجود دارد که همگان از آن آگاه هستند و به خوبی از آن خاطرات یاد می‌کنند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q183"},{"stem":"","a":"سازمان ما موفق شده است نتایج کلیدی خود را بدون افت محسوس در بازه‌های زمانی متوالی حفظ کند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q148"},{"stem":"","a":"مثال‌های زیادی در گذشته سازمان ما وجود دارند که نشان می‌دهند سازمان مشاهدات خود از محیط را به یادگیری تبدیل کرده است.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q158"},{"stem":"","a":"در صورتی که در سازمان ما رفتاری که با فرهنگ سازمانی مطابقت ندارد، تکرار شود سازمان نسبت به آن حساسیت نشان می‌دهد.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q163"},{"stem":"","a":"سازمان ما همواره در حوزه جبران خدمات، پاداش و قدردانی به شکلی قابل پیش‌بینی و رضایت‌بخش عمل می‌‎کند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q167"},{"stem":"","a":"در سازمان ما اطلاعاتی که در اختیار افراد قرار می‌گیرد، قابل اتکا و دقیق هستند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q172"},{"stem":"","a":"هرچند محیط تغییراتی داشته که سازمان ما را دچار تلاطم نموده است، اعتقاد داریم این تلاطم‌ها در آینده نیز تکرار خواهند شد و تکرار هرچه بیشتر آن‌ها باعث توانمندتر شدن شرکت شده است و خواهد شد.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q184"},{"stem":"","a":"سازمان ما قادر است نتایج و دستاوردهای خود را در آینده نیز تکرار کند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q149"},{"stem":"","a":"در سازمان ما اشتباهات و نواقص تکراری به ندرت رخ می‌دهند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q159"},{"stem":"","a":"در صورتی که سازمان با یک خطای فرایندی و عملکردی روبرو شود، قادر است به شکل اثربخشی راه‌حل آن را شناسایی و اجرا کند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q160"},{"stem":"","a":"سیستم‌های اطلاعاتی در سازمان ما ساده و کارآمد هستند.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q173"},{"stem":"","a":"فرهنگ سازمان ما اثر مشخصی در تصمیمات و عملکرد روزانه مدیران و کارکنان دارد.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q186"},{"stem":"","a":"در سازمان ما تصویری روشن و پویا، هم از محیط و هم از خود سازمان، وجود دارد.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q188"},{"stem":"","a":"فرایندها و ساختار در سازمان ما طوری طراحی شده است که برنامه‌ریزی به شکلی اثربخش صورت می‌گیرد.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q174"},{"stem":"","a":"مثال‎‌های روشنی از تحقق اهداف سازمان ما و تبدیل شدن دستاوردهای حاصل به جزئی از فرهنگ و هویت آن وجود دارد.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q187"},{"stem":"سازمان من تمایل دارد","a":"سازمان ما در صورتی که یک تغییر را لازم تشخیص دهد، با آغوش باز به استقبال آن می‌رود.","b":"","labels":["خیلی زیاد","زیاد","متوسط","کم","خیلی کم"],"code":"Q190"}]},"outro":{"align":"right","blocks":[{"t":"h","x":"از مشارکت شما سپاسگزاریم"},{"t":"p","x":"پاسخ‌های شما ثبت شد، اما هنوز برای ما ارسال نشده است. لطفاً دکمه «دانلود فایل پاسخ‌ها» را بزنید و فایل را به [آدرس ایمیل یا پیام‌رسان] بفرستید."}]}});
+</script>
+</body>
+</html>
